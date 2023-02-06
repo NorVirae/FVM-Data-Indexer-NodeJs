@@ -26,8 +26,9 @@ const start = async () => {
     try {
       await mongoose.connect(
         process.env.MONGODB_CONNECTION
-      );
-      app.listen(3000, () => console.log("Server started on port 3000"));
+      )
+
+      console.log("DB connected successfully!")
     } catch (error) {
       console.error(error);
       process.exit(1);
