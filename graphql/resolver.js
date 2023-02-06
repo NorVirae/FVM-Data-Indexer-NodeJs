@@ -4,82 +4,123 @@ const {
   GraphQLList,
   GraphQLNonNull,
   GraphQLInt,
+  GraphQLID,
 } = require("graphql");
-const { BookType, AuthorType } = require("./schema");
-
-const authors = [
-  { id: 1, name: "J. K. Rowling" },
-  { id: 2, name: "J. R. R. Tolkien" },
-  { id: 3, name: "Brent Weeks" },
-];
-
-const books = [
-  { id: 1, name: "Harry Potter and the Chamber of Secrets", authorId: 1 },
-  { id: 2, name: "Harry Potter and the Prisoner of Azkaban", authorId: 1 },
-  { id: 3, name: "Harry Potter and the Goblet of Fire", authorId: 1 },
-  { id: 4, name: "The Fellowship of the Ring", authorId: 2 },
-  { id: 5, name: "The Two Towers", authorId: 2 },
-  { id: 6, name: "The Return of the King", authorId: 2 },
-  { id: 7, name: "The Way of Shadows", authorId: 3 },
-  { id: 8, name: "Beyond the Shadows", authorId: 3 },
-];
+const { Bid } = require("../models/bid.model");
+const { Podcast } = require("../models/podcast.model");
+const { PodSale } = require("../models/podsale.model");
+const { Tip } = require("../models/tip.model");
+const { User } = require("../models/users.model");
+const {
+  BidType,
+  PodcastType,
+  PodSaleType,
+  TipType,
+  UserType,
+} = require("./schema");
 
 const RootQueryType = new GraphQLObjectType({
   name: "Query",
   description: "Root Query",
   fields: () => ({
-    book: {
-      type: BookType,
-      description: "Book",
+    bid: {
+      type: BidType,
+      description: "Bid",
       args: {
-        id: { type: GraphQLInt },
+        id: { type: GraphQLID },
       },
-      resolve: (parent, args) => books.find((book) => book.id === args.id),
+      resolve: (parent, args) => Bid.find({id: args.id}),
     },
-    books: {
-      type: new GraphQLList(BookType),
-      description: "List of books",
-      resolve: () => books,
+    bids: {
+      type: new GraphQLList(BidType),
+      description: "List of Bids",
+      resolve: () => Bid.find(),
     },
-    author: {
-      type: AuthorType,
-      description: "Author",
+
+    podcast: {
+      type: PodcastType,
+      description: "Podcast",
       args: {
-        id: { type: GraphQLInt },
+        id: { type: GraphQLID },
       },
       resolve: (parent, args) =>
-        authors.find((author) => author.id === args.id),
+        Podcast.find({id: args.id}),
+    },
+    podcasts: {
+      type: new GraphQLList(PodcastType),
+      description: "List of podcasts",
+      resolve: () => Podcast.find(),
+    },
+
+    podsale: {
+      type: PodSaleType,
+      description: "PodSale",
+      args: {
+        id: { type: GraphQLID },
+      },
+      resolve: (parent, args) =>
+        PodSale.find({id: args.id}),
+    },
+    podsales: {
+      type: new GraphQLList(AuthorType),
+      description: "List of podsales",
+      resolve: () => PodSale.find(),
+    },
+
+    tip: {
+      type: TipType,
+      description: "Tip",
+      args: {
+        id: { type: GraphQLID },
+      },
+      resolve: (parent, args) =>
+        Tip.find({id: args.id}),
     },
     authors: {
-      type: new GraphQLList(AuthorType),
-      description: "List of Authors",
-      resolve: () => authors,
+      type: new GraphQLList(TipType),
+      description: "List of Tips",
+      resolve: () => Tip.find(),
+    },
+
+    user: {
+      type: UserType,
+      description: "user",
+      args: {
+        id: { type: GraphQLID },
+      },
+      resolve: (parent, args) =>
+        User.find({id: args.id}),
+    },
+    users: {
+      type: new GraphQLList(UserType),
+      description: "List of Users",
+      resolve: () => User.find({id: args.id}),
     },
   }),
 });
 
-const RootMutationType = new GraphQLObjectType({
-  name: "Mutation",
-  description: "Root Mutation",
-  fields: () => ({
-    addBook: {
-      type: BookType,
-      description: "Add a book",
-      args: {
-        name: { type: new GraphQLNonNull(GraphQLString) },
-        authorId: { type: new GraphQLNonNull(GraphQLInt) },
-      },
-      resolve: (parent, args) => {
-        const book = {
-          id: books.length + 1,
-          name: args.name,
-          authorId: args.authorId,
-        };
-        books.push(book);
-        return book;
-      },
-    },
-  }),
-});
+// const RootMutationType = new GraphQLObjectType({
+//   name: "Mutation",
+//   description: "Root Mutation",
+//   fields: () => ({
+//     addBook: {
+//       type: BookType,
+//       description: "Add a book",
+//       args: {
+//         name: { type: new GraphQLNonNull(GraphQLString) },
+//         authorId: { type: new GraphQLNonNull(GraphQLInt) },
+//       },
+//       resolve: (parent, args) => {
+//         const book = {
+//           id: books.length + 1,
+//           name: args.name,
+//           authorId: args.authorId,
+//         };
+//         books.push(book);
+//         return book;
+//       },
+//     },
+//   }),
+// });
 
 module.exports = { RootQueryType, RootMutationType };

@@ -18,6 +18,21 @@ const CONTRACT_ABI = require("./abi/auction.json"); // add your abi to the abi j
 const { GraphQLSchema } = require("graphql");
 const { RootQueryType, RootMutationType } = require("./graphql/resolver");
 const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+const mongoose = require("mongoose");
+
+const start = async () => {
+    try {
+      await mongoose.connect(
+        "mongodb://root:root@localhost:27017/mongoose?authSource=admin"
+      );
+      app.listen(3000, () => console.log("Server started on port 3000"));
+    } catch (error) {
+      console.error(error);
+      process.exit(1);
+    }
+  };
+  
+  start();
 
 let blockNumber = 57185;
 
@@ -70,24 +85,24 @@ async function indexData() {
 }
 
 const schema = new GraphQLSchema({
-    query: RootQueryType,
-    mutation: RootMutationType,
-  });
-  
-  app.use(
-    "/graphql",
-    expressGraphQL({
-      schema: schema,
-      graphiql: true,
-    })
-  );
+  query: RootQueryType,
+//   mutation: RootMutationType,
+});
+
+app.use(
+  "/graphql",
+  expressGraphQL({
+    schema: schema,
+    graphiql: true,
+  })
+);
 
 app.use(
   bodyParser.urlencoded({
     extended: true,
   })
 );
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cors());
 
 app.use(router);
