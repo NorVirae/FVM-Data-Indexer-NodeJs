@@ -14,6 +14,10 @@ const BidSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  auctionId: {
+    type: Number,
+    required: true
+  }
  
 });
 

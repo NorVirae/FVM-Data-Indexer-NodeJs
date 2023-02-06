@@ -35,7 +35,7 @@ const PodcastType = new GraphQLObjectType({
     metadataURI: { type: new GraphQLNonNull(GraphQLString) },
     created: { type: new GraphQLNonNull(GraphQLString) },
     ownerAddress: {
-      type: new UserType(),
+      type: UserType,
       resolve: (user) => {
         let foundUser = User.find({ id: user.id });
         console.log(foundUser);
@@ -107,7 +107,7 @@ const UserType = new GraphQLObjectType({
     id: { type: new GraphQLNonNull(GraphQLInt) },
     isRecentWinner: { type: new GraphQLNonNull(GraphQLString) },
     bids: {
-      type: GraphQLList(BidType),
+      type: new GraphQLList(BidType),
       resolve: (bid) => {
         return Bid.find({id: bid.id});
       },
@@ -119,7 +119,7 @@ const UserType = new GraphQLObjectType({
       },
     },
     podcasts: {
-      type: GraphQLList(PodcastType),
+      type: new GraphQLList(PodcastType),
       resolve: (podcast) => {
         return Podcast.find({id: podcast.id});
       },

@@ -62,7 +62,7 @@ const RootQueryType = new GraphQLObjectType({
         PodSale.find({id: args.id}),
     },
     podsales: {
-      type: new GraphQLList(AuthorType),
+      type: new GraphQLList(PodSaleType),
       description: "List of podsales",
       resolve: () => PodSale.find(),
     },
@@ -123,4 +123,4 @@ const RootQueryType = new GraphQLObjectType({
 //   }),
 // });
 
-module.exports = { RootQueryType, RootMutationType };
+module.exports = { RootQueryType };

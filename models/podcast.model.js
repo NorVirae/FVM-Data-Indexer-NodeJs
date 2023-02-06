@@ -2,11 +2,15 @@
 const mongoose = require("mongoose");
 
 const PodcastSchema = new mongoose.Schema({
-  id: {
+  tokenId: {
     type: String,
     required: true,
   },
-  metadataURI: {
+  nftCreator: {
+    type: String,
+    required: true,
+  },
+  ipfsUri: {
     type: String,
     required: true,
   },
@@ -14,7 +18,6 @@ const PodcastSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
- 
 });
 
 const Podcast = mongoose.model("Podcast", PodcastSchema);
