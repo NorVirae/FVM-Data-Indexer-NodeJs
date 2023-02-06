@@ -4,6 +4,8 @@ var cors = require("cors");
 var app = express();
 var http = require("http");
 var bodyParser = require("body-parser");
+require('dotenv').config()
+
 const Web3 = require("web3");
 
 const web3 = new Web3("https://api.hyperspace.node.glif.io/rpc/v1"); // hyperspace network
@@ -23,7 +25,7 @@ const mongoose = require("mongoose");
 const start = async () => {
     try {
       await mongoose.connect(
-        "mongodb://root:root@localhost:27017/mongoose?authSource=admin"
+        process.env.MONGODB_CONNECTION
       );
       app.listen(3000, () => console.log("Server started on port 3000"));
     } catch (error) {
