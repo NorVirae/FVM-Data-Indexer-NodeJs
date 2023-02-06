@@ -1,4 +1,5 @@
 var express = require("express");
+const expressGraphQL = require("express-graphql").graphqlHTTP;
 var cors = require("cors");
 var app = express();
 var http = require("http");
@@ -14,6 +15,8 @@ const server = http.createServer(app);
 
 const CONTRACT_ADDRESS = "0x56A2EF3d9ff17c94ccb8b62909887edB46eB5140"; // add your contract address here.
 const CONTRACT_ABI = require("./abi/auction.json"); // add your abi to the abi json file.
+const { GraphQLSchema } = require("graphql");
+const { RootQueryType, RootMutationType } = require("./graphql/resolver");
 const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
 
 let blockNumber = 57185;
@@ -65,6 +68,19 @@ async function indexData() {
   // query data logic.
   getEvents();
 }
+
+const schema = new GraphQLSchema({
+    query: RootQueryType,
+    mutation: RootMutationType,
+  });
+  
+  app.use(
+    "/graphql",
+    expressGraphQL({
+      schema: schema,
+      graphiql: true,
+    })
+  );
 
 app.use(
   bodyParser.urlencoded({
